@@ -1,0 +1,15 @@
+# Data files (download separately - see README)
+*/data/*.xlsx
+*/data/*.csv
+*/data/*.xls
+
+# Python
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+*.egg-info/
+.env
+
+# OS
+.DS_Store
+Thumbs.db

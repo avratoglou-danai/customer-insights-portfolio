@@ -683,13 +683,13 @@
     <div class="social-links">
       <a href="https://linkedin.com" target="_blank" class="btn btn-light">LinkedIn ↗</a>
       <a href="https://github.com" target="_blank" class="btn btn-ghost">GitHub ↗</a>
-      <a href="mailto:your@email.com" class="btn btn-ghost">Email ↗</a>
+      <a href="/cdn-cgi/l/email-protection#d5acbaa0a795b0b8b4bcb9fbb6bab8" class="btn btn-ghost">Email ↗</a>
     </div>
   </div>
 
   <footer>Built with real data &nbsp;·&nbsp; Hosted on GitHub Pages &nbsp;·&nbsp; <span id="year"></span></footer>
 
-  <script>
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
     document.getElementById('year').textContent = new Date().getFullYear();
 
     const observer = new IntersectionObserver((entries) => {
@@ -703,11 +703,4 @@
     const barObs = new IntersectionObserver((entries) => {
       entries.forEach(e => {
         if (e.isIntersecting) { e.target.classList.add('visible'); barObs.unobserve(e.target); }
-      });
-    }, { threshold: 0.2 });
-
-    document.querySelectorAll('.skills-grid').forEach(el => barObs.observe(el));
-  </script>
-
-</body>
-</html>
+    
