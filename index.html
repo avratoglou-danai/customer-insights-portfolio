@@ -571,9 +571,9 @@
 
   <!-- CASE STUDIES -->
   <section class="section" id="work">
-    <div class="section-eyebrow fade-up">Case Studies</div>
-    <h2 class="section-title fade-up">Selected Work</h2>
-    <div class="cases-list fade-up">
+    <div class="section-eyebrow">Case Studies</div>
+    <h2 class="section-title">Selected Work</h2>
+    <div class="cases-list">
 
       <a href="https://github.com/avratoglou-danai/customer-insights-portfolio/blob/main/01-ltv-analysis/notebook.ipynb" target="_blank" class="case-card">
         <div class="case-num">01</div>
@@ -683,24 +683,30 @@
     <div class="social-links">
       <a href="https://www.linkedin.com/in/danaiav/" target="_blank" class="btn btn-light">LinkedIn ↗</a>
       <a href="https://github.com/avratoglou-danai" target="_blank" class="btn btn-ghost">GitHub ↗</a>
-      <a href="mailto:danai.avratoglou@gmail.com" class="btn btn-ghost">Email ↗</a>
+      <a href="/cdn-cgi/l/email-protection#4125202f20286f20373320352e262d2e3401262c20282d6f222e2c" class="btn btn-ghost">Email ↗</a>
     </div>
   </div>
 
   <footer>Built with real data &nbsp;·&nbsp; Hosted on GitHub Pages &nbsp;·&nbsp; <span id="year"></span></footer>
 
-  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  <script>
     document.getElementById('year').textContent = new Date().getFullYear();
 
+    // Fade-up on scroll
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(e => {
         if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
       });
-    }, { threshold: 0.1 });
+    }, { threshold: 0.05 });
 
     document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
 
+    // Skill bars animate on scroll
     const barObs = new IntersectionObserver((entries) => {
       entries.forEach(e => {
         if (e.isIntersecting) { e.target.classList.add('visible'); barObs.unobserve(e.target); }
-    
+      });
+    }, { threshold: 0.2 });
+
+    document.querySelectorAll('.skills-grid').forEach(el => barObs.observe(el));
+  </script>
