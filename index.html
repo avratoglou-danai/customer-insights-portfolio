@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Customer Insights Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@200;300;400&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg:        #f5f0e8;
+      --parchment: #ede5d4;
+      --sand:      #d9cdb8;
+      --camel:     #b89a74;
+      --terracotta:#c4694f;
+      --brown:     #7a4f35;
+      --chocolate: #3d2314;
+      --text:      #2e1a0e;
+      --text-mid:  #7a6050;
+      --text-dim:  #a8917a;
+      --border:    #d0c2ae;
+      --border-lt: #e6ddd0;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Jost', sans-serif;
+      font-weight: 300;
+      line-height: 1.75;
+      overflow-x: hidden;
+    }
+
+    /* subtle grain texture */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.022;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.4rem 4rem;
+      background: rgba(245,240,232,0.88);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-lt);
+    }
+
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.05rem;
+      font-weight: 400;
+      color: var(--chocolate);
+      letter-spacing: 0.04em;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 3rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.72rem;
+      font-weight: 300;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-mid);
+      text-decoration: none;
+      transition: color 0.25s;
+    }
+
+    .nav-links a:hover { color: var(--terracotta); }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 10rem 4rem 5rem;
+      max-width: 1080px;
+      margin: 0 auto;
+    }
+
+    .hero-eyebrow {
+      font-size: 0.68rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--terracotta);
+      margin-bottom: 2.5rem;
+      opacity: 0;
+      animation: riseIn 0.8s ease forwards 0.3s;
+    }
+
+    .hero h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3.2rem, 7vw, 6rem);
+      font-weight: 300;
+      line-height: 1.08;
+      color: var(--chocolate);
+      max-width: 760px;
+      opacity: 0;
+      animation: riseIn 0.9s ease forwards 0.5s;
+    }
+
+    .hero h1 em {
+      font-style: italic;
+      color: var(--terracotta);
+    }
+
+    .hero-divider {
+      width: 48px;
+      height: 1px;
+      background: var(--camel);
+      margin: 2.5rem 0;
+      opacity: 0;
+      animation: riseIn 0.7s ease forwards 0.7s;
+    }
+
+    .hero-sub {
+      font-size: 0.95rem;
+      color: var(--text-mid);
+      max-width: 460px;
+      line-height: 1.8;
+      opacity: 0;
+      animation: riseIn 0.7s ease forwards 0.85s;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 1.2rem;
+      margin-top: 3.5rem;
+      opacity: 0;
+      animation: riseIn 0.7s ease forwards 1.05s;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.8rem 2rem;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 300;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: all 0.25s ease;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary {
+      background: var(--chocolate);
+      color: var(--parchment);
+    }
+
+    .btn-primary:hover {
+      background: var(--brown);
+      transform: translateY(-2px);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--text-mid);
+      border: 1px solid var(--border);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--terracotta);
+      color: var(--terracotta);
+      transform: translateY(-2px);
+    }
+
+    /* STATS */
+    .stats-row {
+      border-top: 1px solid var(--border);
+      padding: 3.5rem 4rem;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      max-width: 1080px;
+      margin: 0 auto;
+    }
+
+    .stat {
+      padding: 0 2.5rem;
+      border-right: 1px solid var(--border-lt);
+      opacity: 0;
+      animation: riseIn 0.6s ease forwards;
+    }
+
+    .stat:first-child { padding-left: 0; }
+    .stat:last-child { border-right: none; }
+    .stat:nth-child(1) { animation-delay: 1.1s; }
+    .stat:nth-child(2) { animation-delay: 1.25s; }
+    .stat:nth-child(3) { animation-delay: 1.4s; }
+
+    .stat-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3.2rem;
+      font-weight: 300;
+      color: var(--chocolate);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-top: 0.4rem;
+    }
+
+    /* SECTION */
+    .section {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 7rem 4rem;
+    }
+
+    .section-eyebrow {
+      font-size: 0.65rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--terracotta);
+      margin-bottom: 1rem;
+    }
+
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 300;
+      color: var(--chocolate);
+      margin-bottom: 4rem;
+      line-height: 1.15;
+    }
+
+    /* CASE CARDS */
+    .cases-list {
+      display: flex;
+      flex-direction: column;
+      border-top: 1px solid var(--border);
+    }
+
+    .case-card {
+      display: grid;
+      grid-template-columns: 80px 1fr auto;
+      align-items: start;
+      gap: 2.5rem;
+      padding: 2.8rem 0;
+      border-bottom: 1px solid var(--border-lt);
+      text-decoration: none;
+      color: inherit;
+      position: relative;
+    }
+
+    .case-card::before {
+      content: '';
+      position: absolute;
+      left: -4rem;
+      right: -4rem;
+      top: 0; bottom: 0;
+      background: var(--parchment);
+      opacity: 0;
+      transition: opacity 0.25s;
+      z-index: 0;
+    }
+
+    .case-card:hover::before { opacity: 1; }
+    .case-card > * { position: relative; z-index: 1; }
+
+    .case-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3rem;
+      font-weight: 300;
+      color: var(--sand);
+      line-height: 1;
+      padding-top: 0.2rem;
+    }
+
+    .case-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.65rem;
+      font-weight: 400;
+      color: var(--chocolate);
+      margin-bottom: 0.6rem;
+      line-height: 1.2;
+    }
+
+    .case-desc {
+      font-size: 0.88rem;
+      color: var(--text-mid);
+      max-width: 540px;
+      margin-bottom: 1.2rem;
+      line-height: 1.75;
+    }
+
+    .case-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .tag {
+      font-size: 0.62rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--brown);
+      border: 1px solid var(--border);
+      padding: 0.22rem 0.7rem;
+    }
+
+    .case-arrow {
+      font-size: 1.1rem;
+      color: var(--sand);
+      padding-top: 0.4rem;
+      transition: transform 0.25s, color 0.25s;
+      flex-shrink: 0;
+    }
+
+    .case-card:hover .case-arrow {
+      transform: translate(4px, -4px);
+      color: var(--terracotta);
+    }
+
+    /* SKILLS */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border-lt);
+      border: 1px solid var(--border-lt);
+    }
+
+    .skill-item {
+      background: var(--bg);
+      padding: 2rem 2rem 1.8rem;
+      transition: background 0.2s;
+    }
+
+    .skill-item:hover { background: var(--parchment); }
+
+    .skill-name {
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-mid);
+      margin-bottom: 1.2rem;
+    }
+
+    .skill-bar {
+      height: 1px;
+      background: var(--border);
+      position: relative;
+    }
+
+    .skill-fill {
+      position: absolute;
+      top: 0; left: 0; bottom: 0;
+      background: var(--terracotta);
+      transform-origin: left;
+      transform: scaleX(0);
+      transition: transform 1.2s cubic-bezier(0.16,1,0.3,1);
+    }
+
+    .skills-grid.visible .skill-fill { transform: scaleX(1); }
+
+    /* ABOUT */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+      align-items: start;
+    }
+
+    .about-text p {
+      font-size: 0.92rem;
+      color: var(--text-mid);
+      margin-bottom: 1.4rem;
+      line-height: 1.85;
+    }
+
+    .pull-quote {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-style: italic;
+      font-weight: 300;
+      color: var(--chocolate);
+      line-height: 1.5;
+      border-left: 2px solid var(--terracotta);
+      padding-left: 1.8rem;
+      margin: 2.5rem 0;
+    }
+
+    .terminal {
+      background: var(--chocolate);
+      font-family: 'Jost', monospace;
+      font-size: 0.78rem;
+      font-weight: 300;
+      color: var(--sand);
+    }
+
+    .terminal-bar {
+      background: var(--brown);
+      padding: 0.7rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+
+    .dot { width: 9px; height: 9px; border-radius: 50%; }
+    .dot-r { background: #c4694f; }
+    .dot-y { background: #c4a14f; }
+    .dot-g { background: #6a9e5c; }
+
+    .terminal-body { padding: 1.8rem; line-height: 2.2; }
+    .t-prompt { color: var(--terracotta); }
+    .t-cmd    { color: var(--parchment); }
+    .t-out    { color: var(--text-dim); }
+    .t-val    { color: var(--camel); }
+
+    /* CONTACT */
+    .contact-strip {
+      background: var(--chocolate);
+      padding: 6rem 4rem;
+      text-align: center;
+    }
+
+    .contact-strip h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3rem;
+      font-weight: 300;
+      color: var(--parchment);
+      margin-bottom: 1rem;
+    }
+
+    .contact-strip p {
+      font-size: 0.88rem;
+      color: var(--camel);
+      margin-bottom: 2.8rem;
+      letter-spacing: 0.04em;
+    }
+
+    .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+    }
+
+    .btn-light {
+      background: var(--parchment);
+      color: var(--chocolate);
+    }
+
+    .btn-light:hover {
+      background: var(--sand);
+      transform: translateY(-2px);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--camel);
+      border: 1px solid var(--brown);
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--camel);
+      color: var(--parchment);
+      transform: translateY(-2px);
+    }
+
+    footer {
+      background: var(--chocolate);
+      border-top: 1px solid var(--brown);
+      text-align: center;
+      padding: 1.8rem;
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--brown);
+    }
+
+    /* ANIMATIONS */
+    @keyframes riseIn {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-up {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      nav { padding: 1.2rem 1.5rem; }
+      .nav-links { display: none; }
+      .hero { padding: 8rem 1.5rem 4rem; }
+      .stats-row { grid-template-columns: 1fr; padding: 2.5rem 1.5rem; }
+      .stat { border-right: none; padding: 1rem 0; border-bottom: 1px solid var(--border-lt); }
+      .stat:last-child { border-bottom: none; }
+      .section { padding: 5rem 1.5rem; }
+      .case-card { grid-template-columns: 50px 1fr; }
+      .case-arrow { display: none; }
+      .skills-grid { grid-template-columns: 1fr 1fr; }
+      .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+      .contact-strip { padding: 4rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="nav-logo">Customer Insights</div>
+    <ul class="nav-links">
+      <li><a href="#work">Work</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-eyebrow">Data Portfolio — Customer Analytics</div>
+    <h1>Turning customer data<br>into <em>strategic clarity</em></h1>
+    <div class="hero-divider"></div>
+    <p class="hero-sub">
+      End-to-end analyses on LTV, CAC, and cohort retention — built with real-world datasets and a focus on business impact.
+    </p>
+    <div class="hero-cta">
+      <a href="#work" class="btn btn-primary">View Case Studies</a>
+      <a href="https://linkedin.com" target="_blank" class="btn btn-outline">LinkedIn ↗</a>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-row">
+    <div class="stat">
+      <div class="stat-num">3</div>
+      <div class="stat-label">Case Studies</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">100K+</div>
+      <div class="stat-label">Rows Analysed</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">3</div>
+      <div class="stat-label">Core Frameworks</div>
+    </div>
+  </div>
+
+  <!-- CASE STUDIES -->
+  <section class="section" id="work">
+    <div class="section-eyebrow fade-up">Case Studies</div>
+    <h2 class="section-title fade-up">Selected Work</h2>
+    <div class="cases-list fade-up">
+
+      <a href="./01-ltv-analysis/notebook.ipynb" class="case-card">
+        <div class="case-num">01</div>
+        <div class="case-body">
+          <div class="case-title">Customer Lifetime Value Modelling</div>
+          <p class="case-desc">Probabilistic LTV estimation using the BG/NBD model on real UK e-commerce transactions. Segmented customers by predicted value to prioritise retention spend.</p>
+          <div class="case-tags">
+            <span class="tag">Python</span><span class="tag">lifetimes</span><span class="tag">pandas</span><span class="tag">UCI Dataset</span>
+          </div>
+        </div>
+        <div class="case-arrow">↗</div>
+      </a>
+
+      <a href="./02-cac-analysis/notebook.ipynb" class="case-card">
+        <div class="case-num">02</div>
+        <div class="case-body">
+          <div class="case-title">Customer Acquisition Cost by Channel</div>
+          <p class="case-desc">Breakdown of CAC per marketing channel with LTV:CAC ratio analysis. Identified the most efficient acquisition paths and flagged underperforming spend.</p>
+          <div class="case-tags">
+            <span class="tag">Python</span><span class="tag">R</span><span class="tag">Kaggle Dataset</span><span class="tag">matplotlib</span>
+          </div>
+        </div>
+        <div class="case-arrow">↗</div>
+      </a>
+
+      <a href="./03-cohort-analysis/notebook.ipynb" class="case-card">
+        <div class="case-num">03</div>
+        <div class="case-body">
+          <div class="case-title">Retention Cohort &amp; Churn Patterns</div>
+          <p class="case-desc">Month-over-month cohort retention heatmap revealing churn inflection points. Surfaced the critical drop-off window for targeted re-engagement campaigns.</p>
+          <div class="case-tags">
+            <span class="tag">Python</span><span class="tag">seaborn</span><span class="tag">pandas</span><span class="tag">UCI Dataset</span>
+          </div>
+        </div>
+        <div class="case-arrow">↗</div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section class="section" id="skills" style="padding-top:0">
+    <div class="section-eyebrow fade-up">Toolkit</div>
+    <h2 class="section-title fade-up">Skills &amp; Tools</h2>
+    <div class="skills-grid fade-up">
+      <div class="skill-item">
+        <div class="skill-name">Python / Pandas</div>
+        <div class="skill-bar"><div class="skill-fill" style="width:90%"></div></div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-name">R / ggplot2</div>
+        <div class="skill-bar"><div class="skill-fill" style="width:75%"></div></div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-name">Cohort Analysis</div>
+        <div class="skill-bar"><div class="skill-fill" style="width:90%"></div></div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-name">LTV Modelling</div>
+        <div class="skill-bar"><div class="skill-fill" style="width:85%"></div></div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-name">CAC / ROAS</div>
+        <div class="skill-bar"><div class="skill-fill" style="width:80%"></div></div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-name">Excel / Sheets</div>
+        <div class="skill-bar"><div class="skill-fill" style="width:95%"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="section" id="about">
+    <div class="about-grid">
+      <div class="about-text fade-up">
+        <div class="section-eyebrow">About</div>
+        <h2 class="section-title" style="margin-bottom:1.5rem">Analyst focused on customer behaviour</h2>
+        <p>I work at the intersection of data and strategy — specifically around how businesses understand, retain, and grow their customer base.</p>
+        <div class="pull-quote">"The goal isn't a beautiful chart. It's a decision someone can act on."</div>
+        <p>These case studies reflect the type of analyses I run professionally: rigorous, reproducible, and framed for business audiences.</p>
+      </div>
+      <div class="terminal fade-up">
+        <div class="terminal-bar">
+          <div class="dot dot-r"></div>
+          <div class="dot dot-y"></div>
+          <div class="dot dot-g"></div>
+        </div>
+        <div class="terminal-body">
+          <div><span class="t-prompt">❯ </span><span class="t-cmd">python ltv_model.py</span></div>
+          <div><span class="t-out">Loading transactions...  </span><span class="t-val">541,909 rows</span></div>
+          <div><span class="t-out">Fitting BG/NBD model...</span></div>
+          <div><span class="t-out">Predicted LTV (12mo):</span></div>
+          <div><span class="t-out">  Top segment:   </span><span class="t-val">£342.80</span></div>
+          <div><span class="t-out">  Mid segment:   </span><span class="t-val">£89.40</span></div>
+          <div><span class="t-out">  Low segment:   </span><span class="t-val">£12.10</span></div>
+          <div><span class="t-prompt">❯ </span><span class="t-cmd">_</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <div class="contact-strip" id="contact">
+    <h2>Let's connect</h2>
+    <p>Open to conversations about data, customer strategy, and analytics roles.</p>
+    <div class="social-links">
+      <a href="https://linkedin.com" target="_blank" class="btn btn-light">LinkedIn ↗</a>
+      <a href="https://github.com" target="_blank" class="btn btn-ghost">GitHub ↗</a>
+      <a href="mailto:your@email.com" class="btn btn-ghost">Email ↗</a>
+    </div>
+  </div>
+
+  <footer>Built with real data &nbsp;·&nbsp; Hosted on GitHub Pages &nbsp;·&nbsp; <span id="year"></span></footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+    const barObs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('visible'); barObs.unobserve(e.target); }
+      });
+    }, { threshold: 0.2 });
+
+    document.querySelectorAll('.skills-grid').forEach(el => barObs.observe(el));
+  </script>
+
+</body>
+</html>
